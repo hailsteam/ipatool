@@ -95,6 +95,8 @@ func (c *client[R]) Send(req Request) (Result[R], error) {
 		request.Header.Set(key, val)
 	}
 
+	println(req.URL + " --> ")
+
 	res, err := c.internalClient.Do(request)
 	if err != nil {
 		return Result[R]{}, fmt.Errorf("request failed: %w", err)
@@ -143,6 +145,7 @@ func (c *client[R]) handleJSONResponse(res *http.Response) (Result[R], error) {
 
 	var data R
 
+	println(string(body))
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		return Result[R]{}, fmt.Errorf("failed to unmarshal json: %w", err)
@@ -161,6 +164,7 @@ func (c *client[R]) handleXMLResponse(res *http.Response) (Result[R], error) {
 	}
 
 	var data R
+	println(string(body))
 
 	normalizedBody := normalizeXMLPlistBody(body)
 
